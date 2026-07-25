@@ -35,8 +35,11 @@ function csvField(value: string): string {
   return /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value
 }
 
+const includeNotes = ref(false)
+
 const csv = computed<string>(() => {
-  const header = ['#', 'Project', ...CRITERIA.map((c) => c.key), 'Total', 'Notes']
+  const header = ['#', 'Project', ...CRITERIA.map((c) => c.key), 'Total']
+  if (includeNotes.value) header.push('Notes')
   const lines = [header.join(',')]
   for (const row of rows.value) {
     const fields = [
@@ -44,8 +47,8 @@ const csv = computed<string>(() => {
       row.project.name,
       ...CRITERIA.map((c) => (row.project.scores[c.id] != null ? String(row.project.scores[c.id]) : '')),
       row.total != null ? String(row.total) : '',
-      row.project.notes,
     ]
+    if (includeNotes.value) fields.push(row.project.notes)
     lines.push(fields.map(csvField).join(','))
   }
   return lines.join('\n')
@@ -154,6 +157,11 @@ async function copyCsv(): Promise<void> {
         <p class="qr-caption">{{ qrError }}</p>
         <button class="qr-download" @click="downloadCsv">Download CSV</button>
       </template>
+      <label class="notes-toggle">
+        <input type="checkbox" v-model="includeNotes" />
+        <span class="notes-toggle-track"><span class="notes-toggle-thumb" /></span>
+        Include notes
+      </label>
     </div>
   </section>
 </template>

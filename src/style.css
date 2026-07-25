@@ -639,6 +639,61 @@ tr.is-leader .lead-tag {
   padding: 8px 16px;
 }
 
+.notes-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  cursor: pointer;
+  user-select: none;
+}
+
+.notes-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.notes-toggle-track {
+  flex-shrink: 0;
+  width: 34px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.notes-toggle-thumb {
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: 2px;
+  border-radius: 50%;
+  background: var(--fg-dim);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.notes-toggle input:checked + .notes-toggle-track {
+  background: var(--pink);
+  border-color: var(--pink);
+}
+
+.notes-toggle input:checked + .notes-toggle-track .notes-toggle-thumb {
+  background: var(--fg);
+  transform: translateX(14px);
+}
+
+.notes-toggle input:focus-visible + .notes-toggle-track {
+  outline: 2px solid var(--fg-dim);
+  outline-offset: 2px;
+}
+
 /* ============ Undo toast ============ */
 
 .undo-toast {
