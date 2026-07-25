@@ -21,6 +21,13 @@ const rows = computed<Row[]>(() =>
 const best = computed(() => Math.max(0, ...rows.value.map((r) => r.total ?? 0)))
 const scoredCount = computed(() => rows.value.filter((r) => r.total != null).length)
 
+const sortByScore = ref(false)
+
+const displayRows = computed<Row[]>(() => {
+  if (!sortByScore.value) return rows.value
+  return [...rows.value].sort((a, b) => (b.total ?? -1) - (a.total ?? -1))
+})
+
 const legend = computed(() =>
   CRITERIA.map((c) => `${c.key}: ${c.title.toLowerCase()}`).join(' · '),
 )
@@ -102,6 +109,11 @@ async function copyCsv(): Promise<void> {
       <h2 class="board-title">All projects</h2>
       <div class="board-head-right">
         <span class="board-progress">{{ scoredCount }} of {{ store.projects.length }} scored</span>
+        <label class="notes-toggle">
+          <input type="checkbox" v-model="sortByScore" />
+          <span class="notes-toggle-track"><span class="notes-toggle-thumb" /></span>
+          Sort by score
+        </label>
         <button class="reset-btn" @click="resetAll">Reset all</button>
       </div>
     </div>
@@ -119,7 +131,7 @@ async function copyCsv(): Promise<void> {
         </thead>
         <tbody>
           <tr
-            v-for="row in rows"
+            v-for="row in displayRows"
             :key="row.i"
             :class="{ 'is-leader': isLeader(row) }"
             @click="openProject(row.i)"
