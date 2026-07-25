@@ -591,6 +591,54 @@ tr.is-leader .lead-tag {
   color: var(--fg-dim);
 }
 
+.board-qr {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.qr-button {
+  padding: 10px;
+  background: #FFFFFF;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: opacity 0.1s ease;
+}
+
+.qr-button:hover { opacity: 0.85; }
+.qr-button:active { opacity: 0.7; }
+
+.qr-image {
+  display: block;
+  width: 180px;
+  height: 180px;
+}
+
+.qr-caption {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  text-align: center;
+}
+
+.qr-download {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+}
+
 /* ============ Undo toast ============ */
 
 .undo-toast {
