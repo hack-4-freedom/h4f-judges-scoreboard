@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import QRCode from 'qrcode'
+import { computed, ref } from 'vue'
 import { store, openProject, resetAll } from '@/store'
 import { CRITERIA, scoreTotal, formatScore, type Project } from '@/data/criteria'
 
@@ -36,7 +35,7 @@ function isLeader(row: Row): boolean {
   return row.total != null && row.total === best.value && best.value > 0
 }
 
-/* ---------- CSV export + QR ---------- */
+/* ---------- CSV export ---------- */
 
 function csvField(value: string): string {
   return /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value
@@ -48,7 +47,7 @@ const csv = computed<string>(() => {
   const header = ['#', 'Project', ...CRITERIA.map((c) => c.key), 'Total']
   if (includeNotes.value) header.push('Notes')
   const lines = [header.join(',')]
-  for (const row of rows.value) {
+  for (const row of displayRows.value) {
     const fields = [
       String(row.i + 1),
       row.project.name,
@@ -61,27 +60,6 @@ const csv = computed<string>(() => {
   return lines.join('\n')
 })
 
-const qrDataUrl = ref<string | null>(null)
-const qrError = ref<string | null>(null)
-
-watch(
-  csv,
-  async (value) => {
-    try {
-      qrDataUrl.value = await QRCode.toDataURL(value, {
-        errorCorrectionLevel: 'L',
-        margin: 1,
-        width: 320,
-      })
-      qrError.value = null
-    } catch {
-      qrDataUrl.value = null
-      qrError.value = 'Too much data for one QR code. Download the CSV instead.'
-    }
-  },
-  { immediate: true },
-)
-
 function downloadCsv(): void {
   const blob = new Blob([csv.value], { type: 'text/csv;charset=utf-8' })
   const url = URL.createObjectURL(blob)
@@ -90,16 +68,6 @@ function downloadCsv(): void {
   a.download = 'board.csv'
   a.click()
   URL.revokeObjectURL(url)
-}
-
-const copied = ref(false)
-let copiedTimer: ReturnType<typeof setTimeout> | undefined
-
-async function copyCsv(): Promise<void> {
-  await navigator.clipboard.writeText(csv.value)
-  copied.value = true
-  clearTimeout(copiedTimer)
-  copiedTimer = setTimeout(() => (copied.value = false), 1500)
 }
 </script>
 
@@ -158,17 +126,10 @@ async function copyCsv(): Promise<void> {
 
     <p class="board-hint">{{ legend }}. Tap a row to open its scorecard.</p>
 
-    <div class="board-qr">
-      <template v-if="qrDataUrl">
-        <button class="qr-button" @click="copyCsv" title="Copy CSV to clipboard">
-          <img :src="qrDataUrl" alt="QR code of the board as CSV" class="qr-image" />
-        </button>
-        <p class="qr-caption">{{ copied ? 'Copied to clipboard' : 'Scan or click for CSV' }}</p>
-      </template>
-      <template v-else-if="qrError">
-        <p class="qr-caption">{{ qrError }}</p>
-        <button class="qr-download" @click="downloadCsv">Download CSV</button>
-      </template>
+    <div class="board-export">
+      <button class="csv-download" type="button" @click="downloadCsv">
+        Download CSV
+      </button>
       <label class="notes-toggle">
         <input type="checkbox" v-model="includeNotes" />
         <span class="notes-toggle-track"><span class="notes-toggle-thumb" /></span>

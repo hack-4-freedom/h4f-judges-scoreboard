@@ -4,10 +4,12 @@ A mobile-first scoring app for judging hackathon presentations. Built with Vue 3
 + Vite + TypeScript.
 
 Judges score each project 1–5 on a set of weighted criteria, jot notes, and see
-a live running total. The Board view ranks all projects and flags the current
-leader.
+a live running total. The Board view ranks all projects, flags the current
+leader, and can download the current board as CSV.
 
 ## Run it
+
+Requires **Node 22 LTS** (`^22.22.2`).
 
 ```sh
 npm install
@@ -33,7 +35,7 @@ src/
     ScoreView.vue            one project at a time: name, criteria, notes
     CriterionBlock.vue       a single 1–5 criterion with rubric hint
     TotalBar.vue             fixed bar: current project + running total paddle
-    BoardView.vue            all projects, totals, leader
+    BoardView.vue            all projects, totals, leader, CSV download
     UndoToast.vue            snackbar to undo the last reset
 ```
 
