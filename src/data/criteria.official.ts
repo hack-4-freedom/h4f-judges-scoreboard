@@ -14,13 +14,13 @@ export const OFFICIAL_CRITERIA: Criterion[] = [
     key: 'A',
     title: 'Need / Problem',
     weight: 0.2,
-    sub: 'The problem. Is it real, specific, and relevant to Brazil?',
+    sub: 'The problem. Is it real, specific, and relevant to the community?',
     levels: [
       'No real problem stated, or one nobody actually has.',
       'Vague and shallow, or not really a societal need.',
       'A recognizable problem, but thin on detail or relevance.',
       'Clear and relevant, missing only a little depth.',
-      'Sharp, specific, and clearly matters to Brazil. This needs solving.',
+      'Sharp, specific, and clearly matters to the community. This needs solving.',
     ],
   },
   {
